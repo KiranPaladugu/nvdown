@@ -69,10 +69,20 @@ public class BookData extends ChapterData implements Serializable {
 	}
 
 	public synchronized void addChapter(String linkUrl, String filePath) {
-		ChapterData chdt = new ChapterData();
+		ChapterData chdt = this.getChapterDetails(linkUrl);
+		if(chdt == null){
+			chdt = new ChapterData();
+		}
 		chdt.setUrl(linkUrl);
-		if (filePath != null)
-			chdt.setFile(new File(filePath));
+		if (filePath != null) {
+			File file = new File(filePath);
+			if (file.exists()) {
+				chdt.setDownloaded(true);
+				chdt.setDownloadDate(new Date(file.lastModified()));
+			}
+			chdt.setFile(file);
+		}
+
 		this.chapters.put(linkUrl, chdt);
 	}
 

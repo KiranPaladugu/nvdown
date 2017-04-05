@@ -3,6 +3,7 @@ package com.pack.tools.novdl.db;
 import java.io.File;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.UUID;
 
 public class ChapterData implements Serializable {
 
@@ -20,6 +21,7 @@ public class ChapterData implements Serializable {
 	private String author;
 	private String translator;
 	private String editor;
+	private String uid = UUID.randomUUID().toString();
 
 	public File getFile() {
 		return file;
@@ -94,19 +96,68 @@ public class ChapterData implements Serializable {
 	}
 
 	public void setChapterDetails(ChapterData chData) {
-		this.file = chData.getFile();
-		this.title = chData.getTitle();
-		this.author = chData.getAuthor();
-		this.editor = chData.getEditor();
-		this.translator = chData.getTranslator();
-		this.url = chData.getUrl();
-		this.id = chData.getId();
-		this.downloadDate = chData.getDownloadDate();
-		this.publishedDate = chData.getPublishedDate();
-		this.notifiedDate = chData.getNotifedDate();
-		this.downloaded = chData.isDownloaded();
-		this.notified = chData.isNotified();
-		this.volume = chData.getVolume();
+		/*
+		 * this.file = chData.getFile(); this.title = chData.getTitle();
+		 * this.author = chData.getAuthor(); this.editor = chData.getEditor();
+		 * this.translator = chData.getTranslator(); this.url = chData.getUrl();
+		 * this.id = chData.getId(); this.downloadDate =
+		 * chData.getDownloadDate(); this.publishedDate =
+		 * chData.getPublishedDate(); this.notifiedDate =
+		 * chData.getNotifedDate(); this.downloaded = chData.isDownloaded();
+		 * this.notified = chData.isNotified(); this.volume =
+		 * chData.getVolume();
+		 */
+		this.update(chData);
+	}
+
+	public void update(ChapterData data) {
+
+		if (data.file != null)
+			this.file = data.file;
+		if (data.title != null)
+			this.title = data.getTitle();
+		if (data.author != null)
+			this.author = data.getAuthor();
+		if (data.editor != null)
+			this.editor = data.getEditor();
+		if (data.translator != null)
+			this.translator = data.getTranslator();
+		if (data.url != null && !this.url.equals(data.getUrl()))
+			this.url = data.url;
+		if (data.id != null) {
+			if (this.id == null || !this.id.equals(data.getId())) {
+				this.id = data.getId();
+			}
+		}
+
+		if (checkDateField(this.downloadDate, data.getDownloadDate()))
+			this.downloadDate = data.getDownloadDate();
+		if (checkDateField(this.publishedDate, data.getPublishedDate()))
+			this.publishedDate = data.getPublishedDate();
+		if (checkDateField(this.notifiedDate, data.getNotifedDate()))
+			this.notifiedDate = data.getNotifedDate();
+		if (file != null && file.exists()) {
+			this.downloaded = true;
+			if (this.downloadDate == null) {
+				this.downloadDate = new Date(file.lastModified());
+			}
+		}
+		if (notifiedDate != null || data.notified)
+			this.notified = true;
+		if (data.getVolume() != null)
+			if (this.volume == null || !this.volume.equals(data.volume))
+				this.volume = data.getVolume();
+		if(this.uid==null && data.getUid()!=null ){
+			this.uid = data.getUid();
+		}
+	}
+
+	private boolean checkDateField(Date curr, Date newData) {
+		if (newData != null && curr != null) {
+			if (curr.after(newData))
+				return true;
+		}
+		return false;
 	}
 
 	public String getAuthor() {
@@ -133,4 +184,11 @@ public class ChapterData implements Serializable {
 		this.editor = editor;
 	}
 
+	public String getUid() {
+		return uid;
+	}
+
+	public void setUid(String uid) {
+		this.uid=uid;
+	}
 }

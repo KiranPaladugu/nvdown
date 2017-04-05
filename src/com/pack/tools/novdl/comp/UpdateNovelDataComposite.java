@@ -3,6 +3,7 @@ package com.pack.tools.novdl.comp;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.UUID;
 
 import com.pack.tools.novdl.db.BookData;
 import com.pack.tools.novdl.db.ChapterData;
@@ -21,9 +22,16 @@ public class UpdateNovelDataComposite implements FileComposite {
 		for (ChapterData chdata : allChapters) {
 			File file = chdata.getFile();
 			if (file != null && file.exists()) {
-				chdata.setDownloadDate(new Date(file.lastModified()));
-				chdata.setDownloaded(true);
+				if (chdata.getDownloadDate() == null) {
+					chdata.setDownloadDate(new Date(file.lastModified()));
+					chdata.setDownloaded(true);
+				}
 				chdata.setId(getIdFromName(file, data.getName()));
+				if (chdata.getUid() == null || chdata.getUid().trim().length() == 0) {
+					chdata.setUid(UUID.randomUUID().toString());
+					System.out.println(String.format("Updating [%s] with uid [%s] for chapter with id [%s]", data.getName(),
+							chdata.getUid(), chdata.getId()));
+				}
 			}
 		}
 		return true;

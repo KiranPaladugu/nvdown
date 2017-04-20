@@ -2,12 +2,19 @@ package com.pack.tools.novdl.ui;
 
 import java.awt.Color;
 import java.awt.GridLayout;
+import java.awt.Toolkit;
+import java.awt.datatransfer.StringSelection;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import javax.swing.BorderFactory;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -19,14 +26,16 @@ import com.pack.tools.novdl.db.NovelData;
 import com.pack.tools.novdl.ui.util.ViewPanel;
 import com.pack.tools.novdl.util.NameValue;
 
-public class BookDataViewPanel extends ViewPanel {
+public class BookDataViewPanel extends ViewPanel implements MouseListener,ActionListener{
 	private JTable table;
 	private DefaultTableModel tblModel;
 	private NovelData displaying;
+	private TablePopup popup = new TablePopup(this);
 
 	public BookDataViewPanel() {
 		tblModel = new DefaultTableModel(0, 4);
 		table = new JTable(tblModel);
+		table.addMouseListener(this);
 		JScrollPane pane = new JScrollPane(table);
 		this.add(pane);
 		this.setLayout(new GridLayout());
@@ -132,4 +141,46 @@ public class BookDataViewPanel extends ViewPanel {
 		}
 		return file.getName();
 	}
+	
+    @Override
+    public void mouseClicked(MouseEvent e) {
+        if(e.getSource().equals(table) && e.isPopupTrigger()){
+            popup.show(table, e.getX(), e.getY());
+        }
+    }
+    @Override
+    public void mousePressed(MouseEvent e) {
+        if(e.getSource().equals(table) && e.isPopupTrigger()){
+            popup.show(table, e.getX(), e.getY());
+        }
+    }
+    @Override
+    public void mouseReleased(MouseEvent e) {
+        if(e.getSource().equals(table) && e.isPopupTrigger()){
+            popup.show(table, e.getX(), e.getY());
+        }
+    }
+    @Override
+    public void mouseEntered(MouseEvent e) {
+        
+    }
+    @Override
+    public void mouseExited(MouseEvent e) {
+        
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        Object source = e.getSource();
+        if(source instanceof JMenuItem){
+            JMenuItem item = (JMenuItem) source;
+            if(item.getText().equals("Copy")){
+                int row = this.table.getSelectedRow();
+                int col = this.table.getSelectedColumn();
+                
+                Toolkit.getDefaultToolkit().getSystemClipboard().setContents(new StringSelection(table.getModel().getValueAt(row, col).toString()), null);
+            }
+        }
+        System.out.println("Action performed by:"+e.getSource());
+    }
 }

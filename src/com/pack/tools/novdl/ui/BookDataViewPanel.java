@@ -181,6 +181,5 @@ public class BookDataViewPanel extends ViewPanel implements MouseListener,Action
                 Toolkit.getDefaultToolkit().getSystemClipboard().setContents(new StringSelection(table.getModel().getValueAt(row, col).toString()), null);
             }
         }
-        System.out.println("Action performed by:"+e.getSource());
     }
 }

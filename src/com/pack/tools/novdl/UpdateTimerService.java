@@ -112,4 +112,9 @@ public class UpdateTimerService implements Runnable, Service {
 		this.pause = false;
 	}
 
+    @Override
+    public String[] getSupportedOperationNames() {
+        return null;
+    }
+
 }

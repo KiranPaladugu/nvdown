@@ -4,6 +4,7 @@ import java.util.List;
 
 public interface Service extends Operation {
 	public Operation[] getSupportedOperations();
+	public String[] getSupportedOperationNames();
 
 	String getServiceName();
 

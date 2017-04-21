@@ -113,4 +113,9 @@ public class UpdateCheckView extends JFrame implements Service, Runnable {
 		view.start();
 	}
 
+    @Override
+    public String[] getSupportedOperationNames() {
+        return null;
+    }
+
 }

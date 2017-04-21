@@ -25,8 +25,6 @@ public class ComponentFactory {
 
 	private void init() {
 		try {
-			System.out.println(
-					Thread.currentThread().getContextClassLoader().getResource("com/pack/tools/novdl/resource/Service.conf"));
 			InputStream inputStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(fileName);
 			if (inputStream != null) {
 				properties.load(inputStream);

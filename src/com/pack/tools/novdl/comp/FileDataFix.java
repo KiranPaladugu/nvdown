@@ -36,6 +36,7 @@ public class FileDataFix {
 				fixExcecutor.addComposite(
 						new FirstContentRemovalComposite("<center><div id=\"ezoic-pub-ad-placeholder", "</div>\n</center>"));
 				fixExcecutor.addComposite(new FirstContentRemovalComposite("<center><script async", "</script>\n</center>"));
+				fixExcecutor.addComposite(new FirstContentRemovalComposite("<br><center><div data-pw-desk", "</div></center><br>"));
 				// fixExcecutor.addComposite(new
 				// ContentReplaceComposite("<br><br>", ""));
 				// fixExcecutor.addComposite(new ContentRemoverComposite("",

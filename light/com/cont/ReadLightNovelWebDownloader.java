@@ -241,7 +241,11 @@ public class ReadLightNovelWebDownloader {
 			}
 			if (redirect) {
 				System.out.println("RedirecteURL :" + urlConn.getHeaderField("Location"));
-				urlConn = (HttpURLConnection) new URL(urlConn.getHeaderField("Location")).openConnection();
+				String redirectURL= urlConn.getHeaderField("Location");
+				if(redirectURL.contains("///")){
+				    redirectURL = redirectURL.replace("///", "//");
+				}
+				urlConn = (HttpURLConnection) new URL(redirectURL).openConnection();
 			}
 			if (urlConn.getContent() instanceof InputStream) {
 				urlInputStream = (InputStream) urlConn.getContent();

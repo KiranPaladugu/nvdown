@@ -143,7 +143,7 @@ public class UrlLinkDownloader implements Runnable {
 							} else {
 								String id = targetFileId;
 								id = id.replace("_CH_", " Chapter ");
-								buffer.append("<h4>" + "Chapter " + id + ".</h4><hr></hr>");
+								buffer.append("<h4>" + id + ".</h4><hr></hr>");
 								buffer.append("\n" + input);
 							}
 						} else {

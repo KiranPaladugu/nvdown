@@ -124,9 +124,13 @@ public class HttpUrlUtilities {
 					redirect = true;
 			}
 			if (redirect) {
-				System.out.println("RedirecteURL :" + urlConn.getHeaderField("Location"));
-				urlConn = (HttpURLConnection) new URL(urlConn.getHeaderField("Location")).openConnection();
-			} else if (flag && urlConn.getResponseCode() != HttpURLConnection.HTTP_OK) {
+                System.out.println("RedirecteURL :" + urlConn.getHeaderField("Location"));
+                String redirectURL= urlConn.getHeaderField("Location");
+                if(redirectURL.contains("///")){
+                    redirectURL = redirectURL.replace("///", "//");
+                }
+                urlConn = (HttpURLConnection) new URL(redirectURL).openConnection();
+            } else if (flag && urlConn.getResponseCode() != HttpURLConnection.HTTP_OK) {
 				if (theUrl.contains("http://")) {
 					theUrl = theUrl.replace("http://", "https://");
 

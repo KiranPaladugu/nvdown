@@ -9,6 +9,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.swing.JOptionPane;
 
@@ -23,6 +24,8 @@ import com.cont.ReadLightNovelWebDownloader;
 import com.cont.UpdateData;
 
 public class CheckUpdates {
+    public static boolean download = false;
+    private static Map<String, String> vmargs = new HashMap<>();
     private String os = System.getProperty("os.name").toLowerCase();
     private Path userHome = Paths.get(System.getProperty("user.home"));
     private static Path userPrivate = Paths.get(System.getProperty("user.home")).resolve("wbnov");
@@ -86,15 +89,24 @@ public class CheckUpdates {
             switch (value) {
             case 0:
                 try {
-                    String[] cmds = new String[] { "cmd", "/c", "start chrome " + url };
+                    UpdateData firstLink = updateMap.get(url).get(0);
+                    if (firstLink == null)
+                        continue;
+                    String[] cmds = new String[] { "cmd", "/c",
+                            "start chrome " + firstLink.getLinkUrl() };
                     if (os.indexOf("mac") >= 0) {
-                        cmds = new String[] { "open", url };
+                        cmds = new String[] { "open", firstLink.getLinkUrl() };
                     }
                     Runtime.getRuntime().exec(cmds);
                 } catch (IOException e) {
                     e.printStackTrace();
                     break;
                 }
+            case 3:
+                log("Making urls...");
+                ReadLightNovelWebDownloader rlnds = new ReadLightNovelWebDownloader();
+                rlnds.doWork(url, updateMap.get(url), download);
+                break;
             case 1:
                 ReadLightNovelWebDownloader rlnd = new ReadLightNovelWebDownloader();
                 rlnd.doWork(url, updateMap.get(url));
@@ -103,11 +115,7 @@ public class CheckUpdates {
                 log("Snooze after 6h");
                 sleep(sleepTime * 12 * 6);
                 break;
-            case 3:
-                log("Making urls...");
-                ReadLightNovelWebDownloader rlnds = new ReadLightNovelWebDownloader();
-                rlnds.doWork(url, updateMap.get(url), false);
-                break;
+
             case 4:
                 break;
             case 5:
@@ -231,7 +239,7 @@ public class CheckUpdates {
         StringBuffer buffer = new StringBuffer();
         int count = 0;
         if (updates != null && !updates.isEmpty()) {
-            if (updates.size() > 12) {
+            if (updates.size() > 6) {
                 UpdateData first = updates.get(0);
                 UpdateData last = updates.get(updates.size() - 1);
                 buffer.append(String.format("<font color=\"blue\"><a href=\"%s\">%s</a></font>,",
@@ -257,7 +265,30 @@ public class CheckUpdates {
         return buffer.toString();
     }
 
+    private static void parseArgs(String args[]) {
+        for (String str : args) {
+            String list[] = str.split(",");
+            for (String l : list) {
+                String[] nv = l.trim().split("=");
+                if (nv.length == 2) {
+                    vmargs.put(nv[0].trim(), nv[1].trim());
+                } else if (nv.length == 1) {
+                    vmargs.put(nv[0].trim(), "-UNDEF-");
+                }
+            }
+        }
+    }
+
     public static void main(String args[]) {
+        if (args != null && args.length > 0) {
+            parseArgs(args);
+        }
+        if (vmargs.containsKey("dump")) {
+            String dmp = vmargs.get("dump");
+            if (dmp.toLowerCase().equals("true") || dmp.toLowerCase().equals("yes")) {
+                download = true;
+            }
+        }
         CheckUpdates check = new CheckUpdates();
         String urls[] = { "http://www.readlightnovel.com/zhan-long",
                 "http://www.readlightnovel.com/tales-of-demons-and-gods",
@@ -267,5 +298,9 @@ public class CheckUpdates {
                 "http://www.readlightnovel.com/martial-god-asura",
                 "http://www.readlightnovel.com/dragon-marked-war-god" };
         check.checkForUpdate(urls);
+    }
+
+    public static boolean canDownload() {
+        return download;
     }
 }

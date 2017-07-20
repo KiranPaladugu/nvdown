@@ -124,7 +124,7 @@ public class HttpUrlUtilities {
 					redirect = true;
 			}
 			if (redirect) {
-                System.out.println("RedirecteURL :" + urlConn.getHeaderField("Location"));
+                System.out.println("[DEBUG]: Redirected URL :" + urlConn.getHeaderField("Location"));
                 String redirectURL= urlConn.getHeaderField("Location");
                 if(redirectURL.contains("///")){
                     redirectURL = redirectURL.replace("///", "//");

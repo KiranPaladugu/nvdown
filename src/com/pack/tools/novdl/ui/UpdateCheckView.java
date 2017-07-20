@@ -65,7 +65,8 @@ public class UpdateCheckView extends JFrame implements Service, Runnable {
 		// String lnfName =
 		// "com.sun.java.swing.plaf.windows.WindowsLookAndFeel";
 		try {
-			UIManager.setLookAndFeel(lnfName);
+		    UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
+//			UIManager.setLookAndFeel(lnfName);
 			SwingUtilities.updateComponentTreeUI(this);
 		} catch (UnsupportedLookAndFeelException ex1) {
 			System.err.println("Unsupported LookAndFeel: " + lnfName);

@@ -68,7 +68,7 @@ public class BookData extends ChapterData implements Serializable {
 		this.chapters = chapters;
 	}
 
-	public synchronized void addChapter(String linkUrl, String filePath) {
+	public synchronized ChapterData addChapter(String linkUrl, String filePath) {
 		ChapterData chdt = this.getChapterDetails(linkUrl);
 		if(chdt == null){
 			chdt = new ChapterData();
@@ -84,6 +84,7 @@ public class BookData extends ChapterData implements Serializable {
 		}
 
 		this.chapters.put(linkUrl, chdt);
+		return chdt;
 	}
 
 	@Override

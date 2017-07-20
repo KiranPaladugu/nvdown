@@ -9,6 +9,7 @@ public class ChapterData implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	private File file;
+	private String version;
 	private boolean notified;
 	private Date notifiedDate;
 	private Date publishedDate;
@@ -191,4 +192,12 @@ public class ChapterData implements Serializable {
 	public void setUid(String uid) {
 		this.uid=uid;
 	}
+
+    public String getVersion() {
+        return version;
+    }
+
+    public void setVersion(String version) {
+        this.version = version;
+    }
 }

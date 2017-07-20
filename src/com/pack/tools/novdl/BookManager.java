@@ -6,7 +6,10 @@ import java.io.FileReader;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+
+import javax.swing.UIManager;
 
 import com.pack.tools.novdl.db.BookDbManager;
 import com.pack.tools.novdl.db.NovelData;
@@ -162,7 +165,7 @@ public class BookManager implements BookUpdateListener, UpdateTimerListener, Upd
 
 	@Override
 	public synchronized void onTimeout() {
-		System.out.println("\nTime out ... check all urls.\n");
+		System.out.println("\n[INFO]: "+new Date().toString()+"Time out ... check all urls.\n");
 		if (updChkExecutor.getThreadPoolExcutor().getActiveCount() == 0
 				&& lnkDwnExecutor.getThreadPoolExcutor().getActiveCount() == 0) {
 			checkBookUrls();
@@ -173,6 +176,7 @@ public class BookManager implements BookUpdateListener, UpdateTimerListener, Upd
 	public void onUpdateDownloadedEvent(UpdatesDownloadedEvent ude) {
 		if (updChkExecutor.getThreadPoolExcutor().getActiveCount() == 0
 				&& lnkDwnExecutor.getThreadPoolExcutor().getActiveCount() == 0) {
+		    System.out.println("[INFO ]: Got signal for all DONE@"+new Date().toString());
 			System.out.println("******** All Done! **********");
 			UpdateTimerService.getTimerService().resetTimer();
 			if (!continueCheck) {

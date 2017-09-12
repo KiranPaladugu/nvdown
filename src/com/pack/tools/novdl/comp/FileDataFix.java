@@ -6,13 +6,15 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import com.pack.tools.novdl.BookManager;
 import com.pack.tools.novdl.db.BookDbManager;
 
 public class FileDataFix {
-	private String[] updatedList = {};
+	private Set<String> updated = new HashSet<String>();
 	private List<String> newUpdates = new ArrayList<>();
 
 	public boolean fixData(File file) {
@@ -37,6 +39,7 @@ public class FileDataFix {
 						new FirstContentRemovalComposite("<center><div id=\"ezoic-pub-ad-placeholder", "</div>\n</center>"));
 				fixExcecutor.addComposite(new FirstContentRemovalComposite("<center><script async", "</script>\n</center>"));
 				fixExcecutor.addComposite(new FirstContentRemovalComposite("<br><center><div data-pw-desk", "</div></center><br>"));
+				fixExcecutor.addComposite(new FirstContentRemovalComposite("<br><center><script id=\"m_iframe_tag\"", "</script></center><br>"));
 				// fixExcecutor.addComposite(new
 				// ContentReplaceComposite("<br><br>", ""));
 				// fixExcecutor.addComposite(new ContentRemoverComposite("",
@@ -59,28 +62,21 @@ public class FileDataFix {
 	}
 
 	public boolean isUpdated(File file) {
-		for (String updated : updatedList) {
-			if (updated.equals(file.getAbsolutePath())) {
-				return true;
-			}
-		}
-		return false;
+		return updated.contains(file.getAbsolutePath());
 	}
 
 	private void loadUpdatedFiles() {
 		File file = BookDbManager.getDataDir().resolve("FixerUpdted.txt").toFile();
 		if (file != null && file.exists()) {
-			List<String> list = new ArrayList();
 			try {
 				BufferedReader reader = new BufferedReader(new FileReader(file));
 				String line = null;
 				while ((line = reader.readLine()) != null) {
 					if (line.trim().length() > 0) {
-						list.add(line);
+						updated.add(line);
 					}
 				}
 				reader.close();
-				this.updatedList = list.toArray(updatedList);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -88,13 +84,14 @@ public class FileDataFix {
 	}
 
 	private void writeUpdates() {
+	    if(newUpdates.isEmpty()) {
+	        return;
+	    }
 		File file = BookDbManager.getDataDir().resolve("FixerUpdted.txt").toFile();
 		try {
 			String data = "";
-			int count = 0;
 			for (String str : newUpdates) {
 				data += str + "\n";
-				count++;
 			}
 			if (!file.exists()) {
 				file.createNewFile();

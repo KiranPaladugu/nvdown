@@ -1,11 +1,37 @@
 package com.pack.tools.novdl.comp;
 
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+
+@XmlRootElement
 public class FirstContentRemovalComposite extends AbstractComposite {
 
+    @XmlElement
 	private String start = "";
+    
+    @XmlElement
 	private String end = "";
+    
+    public FirstContentRemovalComposite() {
+    }
 
-	public FirstContentRemovalComposite(String start, String end) {
+	public String getStart() {
+        return start;
+    }
+
+    public void setStart(String start) {
+        this.start = start;
+    }
+
+    public String getEnd() {
+        return end;
+    }
+
+    public void setEnd(String end) {
+        this.end = end;
+    }
+
+    public FirstContentRemovalComposite(String start, String end) {
 		this.start = start;
 		this.end = end;
 	}
